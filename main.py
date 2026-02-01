@@ -18,29 +18,32 @@ def get_client():
     return genai.Client(api_key=api_key)
 
 
-# def get_prompt():    
-#     pass 
-
-
-def main():
-    print("Hello from gemini-bot!")
-
-    client = get_client()
+def get_prompt():    
     parser = argparse.ArgumentParser(description="Gemini AI Bot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def print_verbose(prompt, usage_metadata):
+    print(f"User prompt: {prompt}")
+    print(f"Prompt tokens: {usage_metadata.prompt_token_count}")
+    print(f"Response tokens: {usage_metadata.candidates_token_count}")
+
+def main():
+    client = get_client()
+    args = get_prompt()
+
     prompt = args.user_prompt
     messages = [types.Content(role="user", parts=[types.Part(text=prompt)])]
+    
     response = client.models.generate_content(
-        model="gemini-2.5-flash", contents=messages
+        model="gemini-2.5-flash",
+        contents=messages
     )
     if not response.usage_metadata:
         raise RuntimeError("No usage metadata returned from Gemini API")
     if args.verbose:
-        print(f"User prompt: {prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+        print_verbose(prompt, response.usage_metadata)
     print(f"Response:")
     print(response.text)
 
