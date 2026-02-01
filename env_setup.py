@@ -49,4 +49,4 @@ def _load_dotenv_1password(dotenv_path=".env", stream=None, verbose=False,
 
 # Monkey-patch dotenv module
 dotenv.load_dotenv = _load_dotenv_1password
-sys.modules['dotenv'].load_dotenv = _load_dotenv_1password
+sys.modules['dotenv'].load_dotenv = _load_dotenv_1password # type: ignore
