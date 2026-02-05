@@ -1,0 +1,1 @@
+CHAR_LIMIT = 10000 # Limit response size in characters
